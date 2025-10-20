@@ -6,9 +6,7 @@ from typing import Any
 from hamilton.function_modifiers import cache
 
 from adt_press.llm.web_generation_html import generate_web_page_html
-from adt_press.llm.web_generation_rows import generate_web_page_rows
 from adt_press.llm.web_generation_template import generate_web_page_template
-from adt_press.llm.web_generation_two_column import generate_web_page_two_column
 from adt_press.models.config import HTMLPromptConfig, LayoutType, RenderPromptConfig, RenderStrategy, TemplateConfig, TemplateRenderConfig
 from adt_press.models.plate import Plate, PlateImage, PlateText
 from adt_press.models.section import GlossaryItem
@@ -69,13 +67,8 @@ def web_pages(
             if not config:
                 if "model" in strategy.config and strategy.config["model"] == "default":
                     strategy.config["model"] = default_model_config
-
                 if strategy.render_type == "html":
                     config = HTMLPromptConfig.model_validate(strategy.config)
-                elif strategy.render_type == "rows":
-                    config = RenderPromptConfig.model_validate(strategy.config)
-                elif strategy.render_type == "two_column":
-                    config = RenderPromptConfig.model_validate(strategy.config)
                 elif strategy.render_type == "template":
                     config = TemplateRenderConfig.model_validate(strategy.config)
                 else:
@@ -86,10 +79,6 @@ def web_pages(
                 web_pages.append(
                     generate_web_page_html(strategy_name, config, config.examples, section, groups, texts, images, plate_language_config)
                 )
-            elif strategy.render_type == "rows":
-                web_pages.append(generate_web_page_rows(strategy_name, config, section, groups, texts, images, plate_language_config))
-            elif strategy.render_type == "two_column":
-                web_pages.append(generate_web_page_two_column(strategy_name, config, section, groups, texts, images, plate_language_config))
             elif strategy.render_type == "template":
                 web_pages.append(generate_web_page_template(strategy_name, config, section, groups, texts, images, plate_language_config))
 

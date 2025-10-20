@@ -1,62 +1,44 @@
 <div class="container content mx-auto w-full min-h-screen px-8 py-8 flex items-center justify-center" id="content" style="background-color: {{ section.background_color }};">
     <section id="simple-main" role="article" data-section-type="{{ section.section_type.name }}" data-id="{{ section.section_id }}" {% if section.explanation_id %}data-eli5-id="{{ section.explanation_id }}"{% endif %}>
-    <div class="flex flex-col lg:flex-row px-8 items-start gap-8 max-w-none w-full">
-            {% set counts = namespace(img=0, text=0) %}
-            {% for pid in section.part_ids %}
-                {% if images[pid] %}
-                    {% set counts.img = counts.img + 1 %}
-                {% else %}
-                    {% set counts.text = counts.text + 1 %}
+        <div class="flex flex-col lg:flex-row px-8 items-center max-w-none w-full">
+            <div class="basis-full p-4 flex flex-col" style="color: {{ section.text_color }};">
+                {% for part in section.part_ids %}
+                {% if images[part] %}
+                <!-- we started with text, close that column -->
+                {% if section.part_ids[0].startswith("grp_") %}
+                </div>
+                <div class="basis-full p-4 flex flex-col" style="color: {{ section.text_color }};">
                 {% endif %}
-            {% endfor %}
+                <img class="mb-8 w-full rounded-lg" data-id="{{ part }}" style="max-height: 80vh; object-fit: contain;"></img>
 
-            {% if counts.img == 2 and counts.text == 0 %}
-                <!-- Exactly two images only: render as two side-by-side columns -->
-                <div class="basis-full lg:basis-1/2 p-4 flex flex-col">
-                    {% set left = section.part_ids[0] %}
-                    {% if images[left] %}
-                    <img class="mb-8 w-full rounded-lg" data-id="{{ left }}" style="max-height: 80vh; object-fit: contain;">
-                    {% endif %}
+                <!-- we started with an image, close this column -->
+                {% if section.part_ids[0].startswith("img_") %}
                 </div>
-                <div class="basis-full lg:basis-1/2 p-4 flex flex-col">
-                    {% set right = section.part_ids[1] %}
-                    {% if images[right] %}
-                    <img class="mb-8 w-full rounded-lg" data-id="{{ right }}" style="max-height: 80vh; object-fit: contain;">
+                <div class="basis-full p-4 flex flex-col" style="color: {{ section.text_color }};">
+                {% endif %}
+                
+                {% else %}
+                <div class="mb-8">
+                {% with line_style = "inline" %}
+                {% if groups[part].group_type in ["stanza", "list", "heading"] %}                            
+                {% set line_style = "block" %}
+                {% endif %}
+                {% for text in groups[part].texts %}
+                    {% if text.text_type in ['book_title', 'chapter_title'] %}
+                    <h1 class="mb-6 w-full max-w-4xl font-bold text-4xl" data-id="{{ text.text_id }}">{{ text.text }}</h1>
+                    {% elif text.text_type == 'section_heading' %}
+                    <h2 class="mb-6 w-full max-w-4xl font-bold text-2xl" data-id="{{ text.text_id }}">{{ text.text }}</h2>
+                    {% elif text.text_type == 'book_subtitle' %}
+                    <h3 class="mb-6 w-full max-w-4xl font-semibold text-lg" data-id="{{ text.text_id }}">{{ text.text }}</h3>
+                    {% else %}
+                    <span class="leading-relaxed max-w-4xl {{ line_style }} font-normal" data-id="{{ text.text_id }}">{{ text.text }}</span>
                     {% endif %}
+                {% endfor %}
+                {% endwith %}
                 </div>
-
-            {% elif section.part_ids|length == 1 %}
-                    <!-- Single column layout for image-only or text-only pages -->
-                    <div class="basis-full p-4 flex flex-col justify-center items-center" style="color: {{ section.text_color }};">
-                        {% for part in section.part_ids %}
-                        {% if images[part] %}
-                        <img class="mb-8 w-full rounded-lg" data-id="{{ part }}" style="max-height: 80vh; object-fit: contain;"></img>
-                        {% elif texts[part] %}
-                        <!-- Calculate total text length for single column text -->
-                        {% set total_text_length = 0 %}
-                        {% for text_part in section.part_ids %}
-                            {% if texts[text_part] %}
-                                {% set total_text_length = total_text_length + texts[text_part].text|length %}
-                            {% endif %}
-                        {% endfor %}
-                        
-                        <!-- Use smaller text if total text length exceeds 300 characters -->
-                        {% set text_size_class = "text-lg lg:text-xl" if total_text_length > 300 else "text-2xl lg:text-3xl" %}
-                        
-                        <p class="mb-8 {{ text_size_class }} leading-relaxed text-center font-normal max-w-4xl" data-id="{{ part }}">{{ texts[part].text }}</p>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
-
-            <!-- text left -->
-            {% elsif section.part_ids[0].startswith("grp_") %}
-
-
-
-            <!-- image left -->
-            {% else %}
-
-            {% endif %}
+                {% endif %}
+                {% endfor %}
+            </div>
         </div>
     </section>
 </div>
