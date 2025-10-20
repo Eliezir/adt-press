@@ -7,7 +7,7 @@ from hamilton.function_modifiers import cache
 
 from adt_press.llm.web_generation_html import generate_web_page_html
 from adt_press.llm.web_generation_template import generate_web_page_template
-from adt_press.models.config import HTMLPromptConfig, LayoutType, RenderPromptConfig, RenderStrategy, TemplateConfig, TemplateRenderConfig
+from adt_press.models.config import HTMLPromptConfig, LayoutType, RenderStrategy, TemplateConfig, TemplateRenderConfig
 from adt_press.models.plate import Plate, PlateImage, PlateText
 from adt_press.models.section import GlossaryItem
 from adt_press.models.speech import SpeechFile
