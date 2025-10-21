@@ -82,6 +82,13 @@ class PromptConfig(PathHashMixin):
     max_retries: int = 10
 
 
+class SpeechPromptConfig(PromptConfig):
+    voice: str = "alloy"
+    format: str = "mp3"
+    bit_rate: str = "64k"
+    sample_rate: int = 24000
+
+
 class HTMLPromptConfig(PromptConfig):
     example_dirs: list[str] = []
 
