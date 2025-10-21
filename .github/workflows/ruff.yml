@@ -17,12 +17,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Format code 
+      - name: Check code
         uses: astral-sh/ruff-action@v3
         with:
-          args: "format --check --diff"
+          args: "check --fix"
 
       - name: Format code 
         uses: astral-sh/ruff-action@v3
         with:
-          args: "check"
+          args: "format"
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'style fixes by ruff'
