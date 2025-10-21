@@ -96,7 +96,7 @@ render_strategies:
   two_column:
     render_type: template
     config:
-      render_template_path: templates/two_column_template_render.html
+      render_template_path: templates/two_column_render.html
 
   overlay:
     render_type: html
@@ -117,13 +117,6 @@ render_strategies:
         - assets/prompts/adt_examples/text_and_images_1
         - assets/prompts/adt_examples/text_and_images_2
         - assets/prompts/adt_examples/text_and_images_3
-
-  rows:
-    render_type: rows
-    config:
-      model: default    
-      template_path: prompts/web_generation_rows.jinja2
-      render_template_path: templates/row_render.html
 
 page_range:
   start: 0

@@ -41,7 +41,7 @@ class PipelineTest(unittest.TestCase):
 
             test_config = {
                 "output_dir": self.temp_dir,
-                "web_strategy": "rows",
+                "web_strategy": "dynamic",
                 "crop_strategy": "llm",
                 "label": "raven",
                 "pdf_path": "assets/raven.pdf",
