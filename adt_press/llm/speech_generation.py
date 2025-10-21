@@ -1,13 +1,12 @@
 import os
 
 import litellm
+from pydub import AudioSegment
 
-from adt_press.models.config import PromptConfig, SpeechPromptConfig
+from adt_press.models.config import SpeechPromptConfig
 from adt_press.models.speech import SpeechFile
 from adt_press.utils.html import render_template_to_string
 from adt_press.utils.languages import LANGUAGE_MAP
-
-from pydub import AudioSegment
 
 
 async def generate_speech_file(run_output_dir: str, config: SpeechPromptConfig, language_code: str, text_id: str, text: str) -> SpeechFile:
