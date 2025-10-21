@@ -26,3 +26,7 @@ jobs:
         uses: astral-sh/ruff-action@v3
         with:
           args: "check"
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'style fixes by ruff'
