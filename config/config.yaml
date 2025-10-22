@@ -194,3 +194,7 @@ prompts:
   speech_generation:
     model: gpt-4o-mini-tts
     template_path: prompts/speech_generation.jinja2
+    voice: alloy
+    bit_rate: 64k
+    sample_rate: 24000
+    format: mp3
