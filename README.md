@@ -15,7 +15,7 @@
 | adt\_press/llm/section\_explanations.py     |       20 |        0 |    100% |           |
 | adt\_press/llm/section\_glossary.py         |       18 |        0 |    100% |           |
 | adt\_press/llm/section\_metadata.py         |       27 |        1 |     96% |        25 |
-| adt\_press/llm/speech\_generation.py        |       18 |        0 |    100% |           |
+| adt\_press/llm/speech\_generation.py        |       23 |        0 |    100% |           |
 | adt\_press/llm/text\_easy\_read.py          |       18 |        0 |    100% |           |
 | adt\_press/llm/text\_extraction.py          |       25 |        0 |    100% |           |
 | adt\_press/llm/text\_translation.py         |       19 |        0 |    100% |           |
@@ -30,7 +30,7 @@
 | adt\_press/models/text.py                   |       53 |        0 |    100% |           |
 | adt\_press/models/web.py                    |       14 |        0 |    100% |           |
 | adt\_press/nodes/\_\_init\_\_.py            |        0 |        0 |    100% |           |
-| adt\_press/nodes/config\_nodes.py           |      121 |        4 |     97% |87, 168, 173, 178 |
+| adt\_press/nodes/config\_nodes.py           |      121 |        4 |     97% |88, 169, 174, 179 |
 | adt\_press/nodes/image\_nodes.py            |      109 |        0 |    100% |           |
 | adt\_press/nodes/pdf\_nodes.py              |       73 |        0 |    100% |           |
 | adt\_press/nodes/plate\_nodes.py            |      110 |        2 |     98% |   36, 103 |
@@ -55,7 +55,7 @@
 | tests/test\_parameter\_validation.py        |       30 |        0 |    100% |           |
 | tests/test\_pipeline.py                     |       78 |        0 |    100% |           |
 | tests/test\_web\_generation\_validator.py   |       84 |        0 |    100% |           |
-|                                   **TOTAL** | **1974** |   **82** | **96%** |           |
+|                                   **TOTAL** | **1979** |   **82** | **96%** |           |
 
 
 ## Setup coverage badge
