@@ -74,12 +74,13 @@ jobs:
           name: preview-${{ github.run_id }}
           path: output/raven/
 
+      - name: Install azcopy
+        run: sudo apt install azcopy
+
       - name: Upload to blob storage
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-              azcopy remove "https://adtpress.z1.web.core.windows.net/$web/actions/prs/${{ github.event.number }}/preview/*?{{ secrets.AZURE_STORAGE_SAS_TOKEN }}" --recursive || true
-              azcopy copy output/raven/ "https://adtpress.z1.web.core.windows.net/$web/actions/prs/${{ github.event.number }}/preview/?{{ secrets.AZURE_STORAGE_SAS_TOKEN }}" --recursive --overwrite
+        run: |
+            azcopy remove "https://adtpress.z1.web.core.windows.net/$web/actions/prs/${{ github.event.number }}/preview/*?{{ secrets.AZURE_STORAGE_SAS_TOKEN }}" --recursive || true
+            azcopy copy output/raven/ "https://adtpress.z1.web.core.windows.net/$web/actions/prs/${{ github.event.number }}/preview/?{{ secrets.AZURE_STORAGE_SAS_TOKEN }}" --recursive --overwrite
 
       - name: Comment PR with preview URL
         uses: marocchino/sticky-pull-request-comment@v2
