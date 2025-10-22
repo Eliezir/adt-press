@@ -8,8 +8,6 @@ from adt_press.pipeline import run_pipeline
 TEMP_FLAGS = ["clear_cache", "print_available_models"]
 
 
-
-
 def main() -> None:
     cli_config = OmegaConf.from_cli()
     default_config = OmegaConf.load("config/config.yaml")
