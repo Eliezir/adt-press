@@ -74,15 +74,13 @@ jobs:
           name: preview-${{ github.run_id }}
           path: output/raven/
 
+      - name: Install azcopy
+        run: sudo apt install azcopy
+
       - name: Upload to blob storage
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-              az storage blob delete-batch -s '$web' --pattern "actions/prs/${{ github.event.number }}/preview/*" || true
-              az storage blob upload-batch -d '$web' -s output/raven/ --overwrite --destination-path actions/prs/${{ github.event.number }}/preview/
-        env:
-          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-          AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
+        run: |
+            azcopy remove 'https://adtpress.blob.core.windows.net/$web/actions/prs/${{ github.event.number }}/preview?${{ secrets.AZURE_STORAGE_SAS_TOKEN }}' --recursive || true
+            azcopy copy 'output/raven/*' 'https://adtpress.blob.core.windows.net/$web/actions/prs/${{ github.event.number }}/preview/?${{ secrets.AZURE_STORAGE_SAS_TOKEN }}' --recursive --overwrite=true
 
       - name: Comment PR with preview URL
         uses: marocchino/sticky-pull-request-comment@v2
@@ -101,11 +99,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.action == 'closed'
     steps:
+      - name: Install azcopy
+        run: sudo apt install azcopy
+
       - name: Delete eval preview from blob storage
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-              az storage blob delete-batch -s '$web' --pattern "actions/prs/${{ github.event.number }}/preview/*"
-        env:
-          AZURE_STORAGE_ACCOUNT: ${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}
-          AZURE_STORAGE_KEY: ${{ secrets.AZURE_STORAGE_ACCOUNT_KEY }}
+        run: |
+              azcopy remove 'https://adtpress.blob.core.windows.net/$web/actions/prs/${{ github.event.number }}/preview?${{ secrets.AZURE_STORAGE_SAS_TOKEN }}' --recursive || true
