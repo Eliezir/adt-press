@@ -1,4 +1,4 @@
-"""Text extraction evaluation implementation.
+"""Text type evaluation implementation.
 
 Some notes on the scoring of matches:
 - The LabelStudio text_type dataset sometimes had errors in the text_transcript that were later corrected. Thus, in this script, we correct some of these errors as well (for example, removing double spaces).
@@ -18,8 +18,8 @@ from adt_press.llm.text_extraction import get_page_text
 from adt_press.models.pdf import Page
 
 
-class TextExtractionEvaluator(BaseEvaluator):
-    """Evaluator for text extraction accuracy."""
+class TextTypeEvaluator(BaseEvaluator):
+    """Evaluator for text type accuracy."""
 
     def __init__(self, global_config: Dict[str, Any], task_config: Dict[str, Any], output_dir: Path):
         super().__init__(global_config, task_config, output_dir)
@@ -45,7 +45,7 @@ class TextExtractionEvaluator(BaseEvaluator):
 
         print(f"[{tc['id']:8d}] {text[:65].replace('\n', ' '):<70s}")
 
-        # Call the LLM for text extraction
+        # Call the LLM for text type classification
         page_texts = await get_page_text(str(self.output_dir), f"eval_{tc['id']}", self.prompt_config, page)
         result["page_texts"] = page_texts.model_dump()
 
@@ -69,6 +69,9 @@ class TextExtractionEvaluator(BaseEvaluator):
         # Compare with truth annotations
         matches = []
         for tt in truth:
+            if tt["from_name"] == "notes":
+                continue
+
             text_content = tt["value"]["text"]
             taxonomy = tt["value"].get("taxonomy")
             if not taxonomy:
