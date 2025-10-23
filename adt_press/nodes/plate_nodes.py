@@ -202,9 +202,7 @@ def plate_output_texts_by_id(
         tasks = [
             get_text_translation(
                 text_translation_prompt_config,
-                text_id,
-                text_type,
-                text_content,
+                [(text_id, text_type, text_content)],
                 input_language_config,
                 plate_language_config,
             )
@@ -212,17 +210,31 @@ def plate_output_texts_by_id(
         ]
         return await gather_with_limit(tasks, text_translation_prompt_config.rate_limit)
 
-    texts = run_async_task(translate_texts)
+    results = run_async_task(translate_texts)
+    # Flatten results - each result is a list with one item
+    texts = [text for result_list in results for text in result_list]
     return {t.text_id: t for t in texts}
 
 
 def plate_translations(
     text_translation_prompt_config: PromptConfig,
     plate_language_config: str,
+    plate_groups: list[PlateGroup],
     plate_texts: list[PlateText],
     output_languages_config: list[str],
 ) -> dict[str, dict[str, str]]:
     plate_translations: dict[str, dict[str, str]] = {}
+
+    # Create a lookup for plate texts by ID
+    plate_texts_by_id = {t.text_id: t for t in plate_texts}
+
+    # Identify which text IDs are in groups
+    text_ids_in_groups = set()
+    for group in plate_groups:
+        text_ids_in_groups.update(group.text_ids)
+
+    # Identify texts not in any group
+    ungrouped_text_ids = set(plate_texts_by_id.keys()) - text_ids_in_groups
 
     async def translate_texts():
         tasks = []
@@ -232,13 +244,37 @@ def plate_translations(
                 continue
 
             plate_translations[output_language] = {}
-            for text in plate_texts:
+
+            # Process each group together to maintain context
+            for group in plate_groups:
+                # Gather all texts in this group
+                group_texts = []
+                for text_id in group.text_ids:
+                    if text_id in plate_texts_by_id:
+                        text = plate_texts_by_id[text_id]
+                        group_texts.append((text.text_id, text.text_type, text.text))
+
+                # Skip empty groups
+                if not group_texts:
+                    continue
+
+                # Translate the entire group at once
                 tasks.append(
                     get_text_translation(
                         text_translation_prompt_config,
-                        text.text_id,
-                        text.text_type,
-                        text.text,
+                        group_texts,
+                        plate_language_config,
+                        output_language,
+                    )
+                )
+
+            # Process ungrouped texts individually (as single-item groups)
+            for text_id in ungrouped_text_ids:
+                text = plate_texts_by_id[text_id]
+                tasks.append(
+                    get_text_translation(
+                        text_translation_prompt_config,
+                        [(text.text_id, text.text_type, text.text)],
                         plate_language_config,
                         output_language,
                     )
@@ -246,8 +282,11 @@ def plate_translations(
 
         return await gather_with_limit(tasks, text_translation_prompt_config.rate_limit)
 
-    texts = run_async_task(translate_texts)
-    for text in texts:
-        plate_translations[text.language_code][text.text_id] = text.text
+    results = run_async_task(translate_texts)
+
+    # Flatten the results - all results are now lists
+    for result_list in results:
+        for text in result_list:
+            plate_translations[text.language_code][text.text_id] = text.text
 
     return plate_translations
