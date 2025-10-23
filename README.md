@@ -3,12 +3,16 @@
 [![Deploy Sample](https://github.com/unicef/adt-press/actions/workflows/deploy.yml/badge.svg)](https://github.com/unicef/adt-press/actions/workflows/deploy.yml)
 [![Coverage badge](https://github.com/unicef/adt-press/raw/python-coverage-comment-action-data/badge.svg)](https://github.com/unicef/adt-press/tree/python-coverage-comment-action-data)
 
-
 # ADT Press
 
 A tool for converting PDF files into Accessible Digital Textbooks, ADTs.
 
 The [sample report](https://adtpress.z1.web.core.windows.net/sample/) can help in better understanding the process and outputs or you can view the final [ADT (Accessible Digital Textbook)](https://adtpress.z1.web.core.windows.net/sample/adt/sec_p1_s0.html).
+
+Demos of ADTs created from the outputs of ADT Press:
+ * [Momo Multilingual](https://unicef.github.io/adt-momo-storybook/) - Momo and the Leopards, multi-lingual reader from Bhutan (no edits, pure AI output).
+ * [Queremos](https://unicef.github.io/adt-queremos-participar/) - Informative reader from Uruguay (lightly edited). 
+ * [Cuaderno5 Chapter 1](https://unicef.github.io/ADT-cuaderno5-chapter1/) - Uruguay Grade 5 textbook with Activities (more extensively edited). 
 
 ## Features
 
@@ -47,7 +51,7 @@ uv sync
 Run the main script with the default configuration:
 
 ```bash
-uv run adt-press.py label=mydocument pdf_path=/path/to/your/document.pdf
+uv run adt-press.py label=raven pdf_path=assets/raven.pdf
 ```
 
 ### Configuration
@@ -68,6 +72,11 @@ uv run adt-press.py label=mydocument pdf_path=/path/to/your/document.pdf page_ra
 - `output_dir`: Base directory to store outputs
 - `template_dir`: Directory containing HTML templates
 - `clear_cache`: Whether to clear the processing cache before the run
+- `render_strategy`: Controls which strategy to use for layout generation
+  - `dynamic` (by default) - detects `layout_types` and routes them to render strategies
+  - `two_column` works best for novels and storybooks
+  - `html` works best for textbooks
+  - `overlay` works best for comic books
 
 ## Output
 
@@ -78,7 +87,7 @@ The application generates the following outputs in the `output/[your label]` dir
 - HTML reports with analysis results
 - Visualization of the processing pipeline
 
-## Evalation Framework
+## Evaluation Framework
 
 adt-press includes an evaluation tool used for measuring performance of the various LLM tasks against a gold standard. To run the tool make sure you have the following environment variables set:
 
@@ -160,7 +169,7 @@ docker run --rm adt-press
 To run a specific command inside the container (for example, to execute `uv run adt-press.py` with a PDF file):
 
 ```bash
-docker run --rm adt-press uv run adt-press.py label=mydocument pdf_path=/data/document.pdf
+docker run --rm adt-press uv run adt-press.py label=raven pdf_path=assets/raven.pdf
 ```
 
 Replace `/data/yourfile.pdf` with the path to your PDF file inside the container.

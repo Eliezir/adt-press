@@ -4,14 +4,15 @@ from hamilton.function_modifiers import cache
 from omegaconf import DictConfig
 from pydantic import BaseModel
 
-from adt_press.llm.image_crop import CropPromptConfig
 from adt_press.models.config import (
+    CropPromptConfig,
     HTMLPromptConfig,
     LayoutType,
     PageRangeConfig,
     PromptConfig,
     RenderPromptConfig,
     RenderStrategy,
+    SpeechPromptConfig,
 )
 from adt_press.utils.config import prompt_config_with_model
 from adt_press.utils.file import calculate_file_hash
@@ -155,7 +156,7 @@ def text_easy_read_prompt_config(config: DictConfig) -> PromptConfig:
 
 @cache(behavior="recompute")
 def speech_prompt_config(config: DictConfig) -> PromptConfig:
-    return PromptConfig.model_validate(prompt_config_with_model(config["prompts"]["speech_generation"], config["default_model"]))
+    return SpeechPromptConfig.model_validate(prompt_config_with_model(config["prompts"]["speech_generation"], config["default_model"]))
 
 
 @cache(behavior="recompute")

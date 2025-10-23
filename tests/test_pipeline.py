@@ -37,14 +37,14 @@ class PipelineTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as self.temp_dir:
             file_config = OmegaConf.load("config/config.yaml")
             print(self.temp_dir)
-            self.run_dir = os.path.join(self.temp_dir, "momo")
+            self.run_dir = os.path.join(self.temp_dir, "raven")
 
             test_config = {
                 "output_dir": self.temp_dir,
-                "web_strategy": "rows",
+                "web_strategy": "dynamic",
                 "crop_strategy": "llm",
-                "label": "momo",
-                "pdf_path": "assets/momo.pdf",
+                "label": "raven",
+                "pdf_path": "assets/raven.pdf",
                 "page_range": dict(start=0, end=5),
                 "plate_language": "fr",
                 "output_languages": ["en", "fr"],
@@ -57,6 +57,10 @@ class PipelineTest(unittest.TestCase):
             # print out all the files in the temp directory to help with test failures
             print("Output files in temp directory:")
             for file in Path(self.run_dir).iterdir():
+                print(file)
+
+            print("Files in images directory:")
+            for file in (Path(self.run_dir) / "images").iterdir():
                 print(file)
 
             # assert that our output report was created
@@ -79,17 +83,17 @@ class PipelineTest(unittest.TestCase):
             self.assertFileCount("*.html", len(output_files), "Unexpected number of HTML files created")
             self.assertFileCount("run.png", 1, "Run image not created")
             self.assertFileCount("images/page_?.png", 5, "Unexpected number of page images created")
-            self.assertFileCount("images/img_p*_v?.png", 5, "Unexpected number of vector images created")
-            self.assertFileCount("images/img_p*_r?.png", 3, "Unexpected number of raster images created")
-            self.assertFileCount("images/img_p*_r*_crop*.png", 2, "Unexpected number of cropped images created")
-            self.assertFileCount("images/img_p*_r*_recrop.png", 2, "Unexpected number of recropped images created")
-            self.assertFileCount("images/img_p*_chart.png", 8, "Unexpected number of chart images created")
+            self.assertFileCount("images/img_p*_v?.png", 15, "Unexpected number of vector images created")
+            self.assertFileCount("images/img_p*_r?.png", 10, "Unexpected number of raster images created")
+            self.assertFileCount("images/img_p*_r*_crop*.png", 5, "Unexpected number of cropped images created")
+            self.assertFileCount("images/img_p*_r*_recrop.png", 5, "Unexpected number of recropped images created")
+            self.assertFileCount("images/img_p*_chart.png", 25, "Unexpected number of chart images created")
 
-            self.assertFileContains("page_report.html", ">Momo and the Leopards<", "Title not found in page report")
+            self.assertFileContains("page_report.html", ">Hyena and Raven<", "Title not found in page report")
             self.assertFileContains("page_report.html", ">sec_p1_s0<", "No section found for page 1 in page report")
             self.assertFileContains("page_report.html", "French", "Output language not found in page report")
             self.assertFileContains("page_report.html", "English", "Input language not found in page report")
-            self.assertFileContains("page_report.html", "léopard", "Translated text not found in page report")
+            self.assertFileContains("page_report.html", "corbeau", "Translated text not found in page report")
             self.assertFileContains("page_report.html", "Glossary", "No glossary section found in report")
             self.assertFileContains("page_report.html", "Easy Read", "No easy read section found in report")
 
@@ -98,7 +102,7 @@ class PipelineTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as self.temp_dir:
             file_config = OmegaConf.load("config/config.yaml")
             print(self.temp_dir)
-            self.run_dir = os.path.join(self.temp_dir, "momo")
+            self.run_dir = os.path.join(self.temp_dir, "raven")
 
             test_config = {
                 "output_dir": self.temp_dir,
@@ -109,8 +113,8 @@ class PipelineTest(unittest.TestCase):
                 "explanation_strategy": "none",
                 "easy_read_strategy": "none",
                 "speech_strategy": "none",
-                "label": "momo",
-                "pdf_path": "assets/momo.pdf",
+                "label": "raven",
+                "pdf_path": "assets/raven.pdf",
                 "page_range": dict(start=0, end=5),
                 "plate_language": "en",
                 "output_languages": ["en"],
@@ -141,9 +145,9 @@ class PipelineTest(unittest.TestCase):
                 file_path = Path(f"{self.run_dir}/{file}")
                 assert file_path.exists(), f"Output file {file} was not created."
 
-            self.assertFileContains("page_report.html", ">Momo and the Leopards<", "Title not found in page report")
+            self.assertFileContains("page_report.html", ">Hyena and Raven<", "Title not found in page report")
             self.assertFileContains("page_report.html", ">sec_p1_s0<", "No section found for page 1 in page report")
-            self.assertFileDoesNotContain("page_report.html", "léopard", "French should not be in page report")
+            self.assertFileDoesNotContain("page_report.html", "corbeau", "French should not be in page report")
 
             # rerun using two column web strategy
             test_config["web_strategy"] = "two_column"
