@@ -124,7 +124,13 @@ def extract_pages_from_pdf(output_dir: str, pdf_path: str, start_page: int, end_
 
         # Extract vector drawings (extended=True to get clipping info)
         drawings = fitz_page.get_drawings(extended=True)
-        vector_images = render_drawings(drawings, margin_allowance=0, overlap_threshold=400)
+        vector_images = render_drawings(
+            drawings,
+            page_width=fitz_page.rect.width,
+            page_height=fitz_page.rect.height,
+            margin_allowance=0,
+            overlap_threshold_percent=0.75  # Filter items larger than 75% of page dimension
+        )
 
         for vector_img in vector_images:
             img_id = f"img_{page_id}_v{image_index}"
