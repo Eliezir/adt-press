@@ -260,14 +260,14 @@ def boxes_overlap(
     overlap_threshold: int,
 ) -> bool:  # pragma: no cover
     """Check if two bounding boxes overlap.
-    
+
     Returns True if the boxes spatially overlap (with margin allowance).
     The overlap_threshold parameter is now handled at a higher level (in render_drawings)
     to filter out background elements before grouping.
     """
     min_x1, min_y1, max_x1, max_y1 = box1
     min_x2, min_y2, max_x2, max_y2 = box2
-    
+
     # Check if boxes overlap spatially (with margin)
     has_overlap = not (
         max_x1 + margin_allowance < min_x2
@@ -275,7 +275,7 @@ def boxes_overlap(
         or max_y1 + margin_allowance < min_y2
         or max_y2 + margin_allowance < min_y1
     )
-    
+
     return has_overlap
 
 
@@ -586,54 +586,54 @@ def render_single_drawing(ctx: cairo.Context, drawing):
 
 
 def render_drawings(
-    drawings, 
-    page_width: float, 
+    drawings,
+    page_width: float,
     page_height: float,
-    margin_allowance: int = 10, 
+    margin_allowance: int = 10,
     overlap_threshold_percent: float = 0.75
 ) -> list[RenderedVectorImage]:
     """Renders the passed in PDF drawings to images, using bounding box overlap grouping.
-    
+
     Args:
         drawings: List of drawing objects from PyMuPDF get_drawings()
         page_width: Width of the PDF page in points
         page_height: Height of the PDF page in points
         margin_allowance: Additional margin (in points) to consider when checking overlap (default: 10)
-        overlap_threshold_percent: Percentage of page dimension (0-1) above which items are 
-                                   considered backgrounds (default: 0.65 = 65%)
-    
+        overlap_threshold_percent: Percentage of page dimension (0-1) above which items are
+                                   considered backgrounds (default: 0.75 = 75%)
+
     Returns:
         List of RenderedVectorImage objects
     """
     # Filter to only drawable elements (not clips/groups which are structural)
     drawable_items = [d for d in drawings if d.get("type") not in ["clip", "group"]]
-    
+
     # Separate very large items (likely page backgrounds) from meaningful graphics
     # Very large items that cover most of the page are usually backgrounds/fills
     # We'll filter these out to avoid them causing over-grouping
     bounding_boxes = [compute_bounding_box(d) for d in drawable_items]
-    
+
     # Calculate threshold based on page dimensions
     # Items spanning more than overlap_threshold_percent of the page in either dimension
     # are likely backgrounds/panels that would cause over-grouping
     width_threshold = page_width * overlap_threshold_percent
     height_threshold = page_height * overlap_threshold_percent
-    
+
     large_backgrounds = []
     meaningful_items = []
     for item, bbox in zip(drawable_items, bounding_boxes):
         width = bbox[2] - bbox[0]
         height = bbox[3] - bbox[1]
-        
+
         # Filter items that span most of the page in either dimension
         # (tall panels, wide banners, or full backgrounds)
         is_background = width > width_threshold or height > height_threshold
-        
+
         if is_background:
             large_backgrounds.append(item)
         else:
             meaningful_items.append(item)
-    
+
     # Group the meaningful items (without large backgrounds causing over-grouping)
     # Pass a dummy overlap_threshold for backward compatibility with group_overlapping_drawings
     groups = group_overlapping_drawings(meaningful_items, margin_allowance, overlap_threshold=999999)
