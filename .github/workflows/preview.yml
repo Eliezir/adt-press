@@ -20,7 +20,7 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: preview
+  group: preview-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
