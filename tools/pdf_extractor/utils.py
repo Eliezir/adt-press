@@ -586,11 +586,7 @@ def render_single_drawing(ctx: cairo.Context, drawing):
 
 
 def render_drawings(
-    drawings,
-    page_width: float,
-    page_height: float,
-    margin_allowance: int = 10,
-    overlap_threshold_percent: float = 0.75
+    drawings, page_width: float, page_height: float, margin_allowance: int = 10, overlap_threshold_percent: float = 0.75
 ) -> list[RenderedVectorImage]:
     """Renders the passed in PDF drawings to images, using bounding box overlap grouping.
 
