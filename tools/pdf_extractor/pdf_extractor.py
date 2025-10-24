@@ -124,12 +124,12 @@ def extract_pages_from_pdf(output_dir: str, pdf_path: str, start_page: int, end_
 
         # Extract vector drawings (extended=True to get clipping info)
         drawings = fitz_page.get_drawings(extended=True)
-        
+
         # Debug output for CI troubleshooting
         print(f"  Page {page_number}: Found {len(drawings)} drawings")
         drawable_count = len([d for d in drawings if d.get("type") not in ["clip", "group"]])
         print(f"  Page {page_number}: Drawable items: {drawable_count}")
-        
+
         try:
             vector_images = render_drawings(
                 drawings,
@@ -146,7 +146,9 @@ def extract_pages_from_pdf(output_dir: str, pdf_path: str, start_page: int, end_
 
         for vector_img in vector_images:
             img_id = f"img_{page_id}_v{image_index}"
-            print(f"    Vector image {image_index}: {vector_img.width}x{vector_img.height}, {len(vector_img.image)} bytes")
+            print(
+                f"    Vector image {image_index}: {vector_img.width}x{vector_img.height}, {len(vector_img.image)} bytes"
+            )
 
             # Save vector image
             vector_filename = f"{img_id}.png"
