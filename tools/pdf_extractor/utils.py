@@ -604,6 +604,7 @@ def render_drawings(
     """
     # Filter to only drawable elements (not clips/groups which are structural)
     drawable_items = [d for d in drawings if d.get("type") not in ["clip", "group"]]
+    print(f"    render_drawings: {len(drawable_items)} drawable items from {len(drawings)} total")
 
     # Separate very large items (likely page backgrounds) from meaningful graphics
     # Very large items that cover most of the page are usually backgrounds/fills
@@ -631,9 +632,14 @@ def render_drawings(
         else:
             meaningful_items.append(item)
 
+    print(f"    render_drawings: Filtered {len(large_backgrounds)} large backgrounds (threshold: {overlap_threshold_percent*100}% of page)")
+    print(f"    render_drawings: {len(meaningful_items)} meaningful items remain")
+    print(f"    render_drawings: Page size: {page_width}x{page_height}, thresholds: {width_threshold:.1f}x{height_threshold:.1f}")
+
     # Group the meaningful items (without large backgrounds causing over-grouping)
     # Pass a dummy overlap_threshold for backward compatibility with group_overlapping_drawings
     groups = group_overlapping_drawings(meaningful_items, margin_allowance, overlap_threshold=999999)
+    print(f"    render_drawings: Grouped into {len(groups)} groups")
 
     # For each group, include relevant clip/group elements from the original drawings
     # by finding clips/groups that affect the drawable items in each group
@@ -660,5 +666,8 @@ def render_drawings(
         if enriched_group:
             enriched_groups.append(enriched_group)
 
+    print(f"    render_drawings: {len(enriched_groups)} enriched groups to render")
     results = [render_group_to_image(group) for group in enriched_groups]
-    return [r for r in results if r.width > 0 and r.height > 0]  # Filter out empty images
+    filtered_results = [r for r in results if r.width > 0 and r.height > 0]  # Filter out empty images
+    print(f"    render_drawings: {len(filtered_results)} non-empty results (filtered {len(results) - len(filtered_results)} empty)")
+    return filtered_results
