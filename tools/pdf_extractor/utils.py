@@ -632,9 +632,13 @@ def render_drawings(
         else:
             meaningful_items.append(item)
 
-    print(f"    render_drawings: Filtered {len(large_backgrounds)} large backgrounds (threshold: {overlap_threshold_percent*100}% of page)")
+    print(
+        f"    render_drawings: Filtered {len(large_backgrounds)} large backgrounds (threshold: {overlap_threshold_percent * 100}% of page)"
+    )
     print(f"    render_drawings: {len(meaningful_items)} meaningful items remain")
-    print(f"    render_drawings: Page size: {page_width}x{page_height}, thresholds: {width_threshold:.1f}x{height_threshold:.1f}")
+    print(
+        f"    render_drawings: Page size: {page_width}x{page_height}, thresholds: {width_threshold:.1f}x{height_threshold:.1f}"
+    )
 
     # Group the meaningful items (without large backgrounds causing over-grouping)
     # Pass a dummy overlap_threshold for backward compatibility with group_overlapping_drawings
@@ -669,5 +673,7 @@ def render_drawings(
     print(f"    render_drawings: {len(enriched_groups)} enriched groups to render")
     results = [render_group_to_image(group) for group in enriched_groups]
     filtered_results = [r for r in results if r.width > 0 and r.height > 0]  # Filter out empty images
-    print(f"    render_drawings: {len(filtered_results)} non-empty results (filtered {len(results) - len(filtered_results)} empty)")
+    print(
+        f"    render_drawings: {len(filtered_results)} non-empty results (filtered {len(results) - len(filtered_results)} empty)"
+    )
     return filtered_results
