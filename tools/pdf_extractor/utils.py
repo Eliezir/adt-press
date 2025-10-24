@@ -1,3 +1,4 @@
+# ruff: noqa: T201
 """
 Utility functions for the PDF extractor tool.
 These are copied and adapted from the main application utilities.
