@@ -70,6 +70,7 @@ def pages_for_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int
         str(start_page),
         "--end_page",
         str(end_page),
+        "--quiet",
     ]
 
     # Run the extractor

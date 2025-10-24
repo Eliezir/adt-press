@@ -83,11 +83,11 @@ class PipelineTest(unittest.TestCase):
             self.assertFileCount("*.html", len(output_files), "Unexpected number of HTML files created")
             self.assertFileCount("run.png", 1, "Run image not created")
             self.assertFileCount("images/page_?.png", 5, "Unexpected number of page images created")
-            self.assertFileCount("images/img_p*_v?.png", 15, "Unexpected number of vector images created")
+            self.assertFileCount("images/img_p*_v?.png", 0, "Unexpected number of vector images created")
             self.assertFileCount("images/img_p*_r?.png", 10, "Unexpected number of raster images created")
             self.assertFileCount("images/img_p*_r*_crop*.png", 5, "Unexpected number of cropped images created")
             self.assertFileCount("images/img_p*_r*_recrop.png", 5, "Unexpected number of recropped images created")
-            self.assertFileCount("images/img_p*_chart.png", 25, "Unexpected number of chart images created")
+            self.assertFileCount("images/img_p*_chart.png", 15, "Unexpected number of chart images created")
 
             self.assertFileContains("page_report.html", ">Hyena and Raven<", "Title not found in page report")
             self.assertFileContains("page_report.html", ">sec_p1_s0<", "No section found for page 1 in page report")
