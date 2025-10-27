@@ -70,14 +70,14 @@ def pages_for_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int
         str(start_page),
         "--end_page",
         str(end_page),
-        "--quiet",  # Suppress output for cleaner logs
+        "--quiet",
     ]
 
     # Run the extractor
     try:
-        subprocess.run(cmd, check=True, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, text=True)
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f"PDF extraction failed: {e.stderr}") from e
+        raise RuntimeError(f"PDF extraction failed with exit code {e.returncode}") from e
 
     # Parse the results
     results_file = os.path.join(extract_dir, "pdf_extract.json")

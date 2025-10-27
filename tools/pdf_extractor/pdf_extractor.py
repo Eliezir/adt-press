@@ -25,7 +25,9 @@ FITZ_ZOOM = 2
 FITZ_MAT = pymupdf.Matrix(FITZ_ZOOM, FITZ_ZOOM)
 
 
-def extract_pages_from_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int) -> PDFExtract:
+def extract_pages_from_pdf(
+    output_dir: str, pdf_path: str, start_page: int, end_page: int, quiet: bool = False
+) -> PDFExtract:
     """
     Extract pages from PDF file and return structured data.
 
@@ -124,10 +126,35 @@ def extract_pages_from_pdf(output_dir: str, pdf_path: str, start_page: int, end_
 
         # Extract vector drawings (extended=True to get clipping info)
         drawings = fitz_page.get_drawings(extended=True)
-        vector_images = render_drawings(drawings, margin_allowance=0, overlap_threshold=400)
+
+        # Debug output for CI troubleshooting
+        if not quiet:
+            print(f"  Page {page_number}: Found {len(drawings)} drawings")
+            drawable_count = len([d for d in drawings if d.get("type") not in ["clip", "group"]])
+            print(f"  Page {page_number}: Drawable items: {drawable_count}")
+
+        try:
+            vector_images = render_drawings(
+                drawings,
+                page_width=fitz_page.rect.width,
+                page_height=fitz_page.rect.height,
+                margin_allowance=0,
+                overlap_threshold_percent=0.75,
+                quiet=quiet,
+            )
+            if not quiet:
+                print(f"  Page {page_number}: Rendered {len(vector_images)} vector images")
+        except Exception as e:
+            print(f"  ERROR rendering vector images on page {page_number}: {e}", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
+            vector_images = []
 
         for vector_img in vector_images:
             img_id = f"img_{page_id}_v{image_index}"
+            if not quiet:
+                print(
+                    f"    Vector image {image_index}: {vector_img.width}x{vector_img.height}, {len(vector_img.image)} bytes"
+                )
 
             # Save vector image
             vector_filename = f"{img_id}.png"
@@ -218,7 +245,11 @@ Examples:
 
         # Perform extraction
         result = extract_pages_from_pdf(
-            output_dir=args.output_dir, pdf_path=args.pdf_path, start_page=args.start_page, end_page=args.end_page
+            output_dir=args.output_dir,
+            pdf_path=args.pdf_path,
+            start_page=args.start_page,
+            end_page=args.end_page,
+            quiet=args.quiet,
         )
 
         # Save results to JSON
