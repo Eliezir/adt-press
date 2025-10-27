@@ -7,31 +7,31 @@
 | adt-press.py                                |       23 |        0 |    100% |           |
 | adt\_press/\_\_init\_\_.py                  |        0 |        0 |    100% |           |
 | adt\_press/llm/\_\_init\_\_.py              |        8 |        3 |     62% |  9-10, 15 |
-| adt\_press/llm/glossary\_translation.py     |       21 |        0 |    100% |           |
-| adt\_press/llm/image\_caption.py            |       19 |        0 |    100% |           |
-| adt\_press/llm/image\_crop.py               |       32 |        0 |    100% |           |
-| adt\_press/llm/image\_meaningfulness.py     |       17 |        0 |    100% |           |
-| adt\_press/llm/page\_sectioning.py          |       42 |        0 |    100% |           |
-| adt\_press/llm/section\_explanations.py     |       20 |        0 |    100% |           |
-| adt\_press/llm/section\_glossary.py         |       18 |        0 |    100% |           |
-| adt\_press/llm/section\_metadata.py         |       27 |        1 |     96% |        25 |
+| adt\_press/llm/glossary\_translation.py     |       17 |        0 |    100% |           |
+| adt\_press/llm/image\_caption.py            |       17 |        0 |    100% |           |
+| adt\_press/llm/image\_crop.py               |       28 |        0 |    100% |           |
+| adt\_press/llm/image\_meaningfulness.py     |       15 |        0 |    100% |           |
+| adt\_press/llm/page\_sectioning.py          |       38 |        0 |    100% |           |
+| adt\_press/llm/section\_explanations.py     |       18 |        0 |    100% |           |
+| adt\_press/llm/section\_glossary.py         |       16 |        0 |    100% |           |
+| adt\_press/llm/section\_metadata.py         |       23 |        1 |     96% |        25 |
 | adt\_press/llm/speech\_generation.py        |       23 |        0 |    100% |           |
-| adt\_press/llm/text\_easy\_read.py          |       18 |        0 |    100% |           |
-| adt\_press/llm/text\_extraction.py          |       25 |        0 |    100% |           |
-| adt\_press/llm/text\_translation.py         |       19 |        0 |    100% |           |
-| adt\_press/llm/web\_generation\_html.py     |       47 |        8 |     83% |    74-104 |
+| adt\_press/llm/text\_easy\_read.py          |       16 |        0 |    100% |           |
+| adt\_press/llm/text\_extraction.py          |       19 |        0 |    100% |           |
+| adt\_press/llm/text\_translation.py         |       17 |        0 |    100% |           |
+| adt\_press/llm/web\_generation\_html.py     |       45 |        8 |     82% |    74-104 |
 | adt\_press/llm/web\_generation\_template.py |        9 |        0 |    100% |           |
 | adt\_press/models/\_\_init\_\_.py           |        0 |        0 |    100% |           |
-| adt\_press/models/image.py                  |       37 |        0 |    100% |           |
-| adt\_press/models/pdf.py                    |        8 |        0 |    100% |           |
-| adt\_press/models/plate.py                  |       31 |        0 |    100% |           |
-| adt\_press/models/section.py                |       54 |        0 |    100% |           |
-| adt\_press/models/speech.py                 |        6 |        0 |    100% |           |
-| adt\_press/models/text.py                   |       53 |        0 |    100% |           |
-| adt\_press/models/web.py                    |       14 |        0 |    100% |           |
+| adt\_press/models/image.py                  |       10 |        0 |    100% |           |
+| adt\_press/models/pdf.py                    |        3 |        0 |    100% |           |
+| adt\_press/models/plate.py                  |        7 |        0 |    100% |           |
+| adt\_press/models/section.py                |       33 |        0 |    100% |           |
+| adt\_press/models/speech.py                 |        2 |        0 |    100% |           |
+| adt\_press/models/text.py                   |       35 |        0 |    100% |           |
+| adt\_press/models/web.py                    |        4 |        0 |    100% |           |
 | adt\_press/nodes/\_\_init\_\_.py            |        0 |        0 |    100% |           |
 | adt\_press/nodes/config\_nodes.py           |      121 |        4 |     97% |88, 169, 174, 179 |
-| adt\_press/nodes/image\_nodes.py            |      109 |        0 |    100% |           |
+| adt\_press/nodes/image\_nodes.py            |      109 |        2 |     98% |   49, 100 |
 | adt\_press/nodes/pdf\_nodes.py              |       73 |        0 |    100% |           |
 | adt\_press/nodes/plate\_nodes.py            |      110 |        2 |     98% |   36, 103 |
 | adt\_press/nodes/report\_nodes.py           |       44 |        0 |    100% |           |
@@ -53,9 +53,9 @@
 | tests/test\_encoding.py                     |       39 |        1 |     97% |        64 |
 | tests/test\_page\_sectioning\_validator.py  |       46 |        0 |    100% |           |
 | tests/test\_parameter\_validation.py        |       30 |        0 |    100% |           |
-| tests/test\_pipeline.py                     |       78 |        0 |    100% |           |
+| tests/test\_pipeline.py                     |       76 |        0 |    100% |           |
 | tests/test\_web\_generation\_validator.py   |       84 |        0 |    100% |           |
-|                                   **TOTAL** | **1979** |   **82** | **96%** |           |
+|                                   **TOTAL** | **1832** |   **84** | **95%** |           |
 
 
 ## Setup coverage badge
