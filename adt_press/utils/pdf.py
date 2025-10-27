@@ -75,7 +75,6 @@ def pages_for_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int
 
     # Run the extractor
     try:
-        # Don't capture output so debug messages are visible in logs
         subprocess.run(cmd, check=True, text=True)
     except subprocess.CalledProcessError as e:
         raise RuntimeError(f"PDF extraction failed with exit code {e.returncode}") from e
