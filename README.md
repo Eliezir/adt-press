@@ -18,7 +18,7 @@
 | adt\_press/llm/speech\_generation.py        |       23 |        0 |    100% |           |
 | adt\_press/llm/text\_easy\_read.py          |       16 |        0 |    100% |           |
 | adt\_press/llm/text\_extraction.py          |       19 |        0 |    100% |           |
-| adt\_press/llm/text\_translation.py         |       17 |        0 |    100% |           |
+| adt\_press/llm/text\_translation.py         |       39 |        4 |     90% |27, 31, 38, 40 |
 | adt\_press/llm/web\_generation\_html.py     |       45 |        8 |     82% |    74-104 |
 | adt\_press/llm/web\_generation\_template.py |        9 |        0 |    100% |           |
 | adt\_press/models/\_\_init\_\_.py           |        0 |        0 |    100% |           |
@@ -33,7 +33,7 @@
 | adt\_press/nodes/config\_nodes.py           |      121 |        4 |     97% |88, 169, 174, 179 |
 | adt\_press/nodes/image\_nodes.py            |      109 |        2 |     98% |   49, 100 |
 | adt\_press/nodes/pdf\_nodes.py              |       73 |        0 |    100% |           |
-| adt\_press/nodes/plate\_nodes.py            |      110 |        2 |     98% |   36, 103 |
+| adt\_press/nodes/plate\_nodes.py            |      127 |        3 |     98% |36, 103, 259 |
 | adt\_press/nodes/report\_nodes.py           |       44 |        0 |    100% |           |
 | adt\_press/nodes/section\_nodes.py          |       84 |        1 |     99% |        31 |
 | adt\_press/nodes/speech\_nodes.py           |       24 |        0 |    100% |           |
@@ -55,7 +55,7 @@
 | tests/test\_parameter\_validation.py        |       30 |        0 |    100% |           |
 | tests/test\_pipeline.py                     |       76 |        0 |    100% |           |
 | tests/test\_web\_generation\_validator.py   |       84 |        0 |    100% |           |
-|                                   **TOTAL** | **1832** |   **84** | **95%** |           |
+|                                   **TOTAL** | **1871** |   **89** | **95%** |           |
 
 
 ## Setup coverage badge
