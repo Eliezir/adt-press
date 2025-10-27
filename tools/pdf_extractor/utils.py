@@ -1,3 +1,4 @@
+# ruff: noqa: T201
 """
 Utility functions for the PDF extractor tool.
 These are copied and adapted from the main application utilities.
@@ -586,7 +587,12 @@ def render_single_drawing(ctx: cairo.Context, drawing):
 
 
 def render_drawings(
-    drawings, page_width: float, page_height: float, margin_allowance: int = 10, overlap_threshold_percent: float = 0.75
+    drawings,
+    page_width: float,
+    page_height: float,
+    margin_allowance: int = 10,
+    overlap_threshold_percent: float = 0.75,
+    quiet: bool = False,
 ) -> list[RenderedVectorImage]:
     """Renders the passed in PDF drawings to images, using bounding box overlap grouping.
 
@@ -597,12 +603,15 @@ def render_drawings(
         margin_allowance: Additional margin (in points) to consider when checking overlap (default: 10)
         overlap_threshold_percent: Percentage of page dimension (0-1) above which items are
                                    considered backgrounds (default: 0.75 = 75%)
+        quiet: Suppress debug output (default: False)
 
     Returns:
         List of RenderedVectorImage objects
     """
     # Filter to only drawable elements (not clips/groups which are structural)
     drawable_items = [d for d in drawings if d.get("type") not in ["clip", "group"]]
+    if not quiet:
+        print(f"    render_drawings: {len(drawable_items)} drawable items from {len(drawings)} total")
 
     # Separate very large items (likely page backgrounds) from meaningful graphics
     # Very large items that cover most of the page are usually backgrounds/fills
@@ -617,22 +626,40 @@ def render_drawings(
 
     large_backgrounds = []
     meaningful_items = []
-    for item, bbox in zip(drawable_items, bounding_boxes):
+    for idx, (item, bbox) in enumerate(zip(drawable_items, bounding_boxes)):
         width = bbox[2] - bbox[0]
         height = bbox[3] - bbox[1]
 
-        # Filter items that span most of the page in either dimension
-        # (tall panels, wide banners, or full backgrounds)
+        # Filter items that span most of the page
         is_background = width > width_threshold or height > height_threshold
+
+        # Debug: show dimensions and coverage percentage for each item
+        if not quiet:
+            coverage_w = (width / page_width) * 100 if page_width > 0 else 0
+            coverage_h = (height / page_height) * 100 if page_height > 0 else 0
+            print(
+                f"      Item {idx}: {width:.1f}x{height:.1f} ({coverage_w:.1f}%x{coverage_h:.1f}%) - {'FILTERED' if is_background else 'kept'}"
+            )
 
         if is_background:
             large_backgrounds.append(item)
         else:
             meaningful_items.append(item)
 
+    if not quiet:
+        print(
+            f"    render_drawings: Filtered {len(large_backgrounds)} large backgrounds (threshold: {overlap_threshold_percent * 100}% of page)"
+        )
+        print(f"    render_drawings: {len(meaningful_items)} meaningful items remain")
+        print(
+            f"    render_drawings: Page size: {page_width}x{page_height}, thresholds: {width_threshold:.1f}x{height_threshold:.1f}"
+        )
+
     # Group the meaningful items (without large backgrounds causing over-grouping)
     # Pass a dummy overlap_threshold for backward compatibility with group_overlapping_drawings
     groups = group_overlapping_drawings(meaningful_items, margin_allowance, overlap_threshold=999999)
+    if not quiet:
+        print(f"    render_drawings: Grouped into {len(groups)} groups")
 
     # For each group, include relevant clip/group elements from the original drawings
     # by finding clips/groups that affect the drawable items in each group
@@ -659,5 +686,12 @@ def render_drawings(
         if enriched_group:
             enriched_groups.append(enriched_group)
 
+    if not quiet:
+        print(f"    render_drawings: {len(enriched_groups)} enriched groups to render")
     results = [render_group_to_image(group) for group in enriched_groups]
-    return [r for r in results if r.width > 0 and r.height > 0]  # Filter out empty images
+    filtered_results = [r for r in results if r.width > 0 and r.height > 0]  # Filter out empty images
+    if not quiet:
+        print(
+            f"    render_drawings: {len(filtered_results)} non-empty results (filtered {len(results) - len(filtered_results)} empty)"
+        )
+    return filtered_results
