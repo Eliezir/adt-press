@@ -105,15 +105,15 @@ class TextTypeEvaluator(BaseEvaluator):
                 }
             )
 
-        # Add unmatched actual results
-        for normalized_content, actual_type in actual_type_by_text.items():
-            matches.append(
-                {
-                    "text": normalized_content,
-                    "expected": None,
-                    "actual": actual_type,
-                }
-            )
+        # Add u nmatched actual results
+        #for normalized_content, actual_type in actual_type_by_text.items():
+        #    matches.append(
+        #        {
+        #            "text": normalized_content,
+        #            "expected": None,
+        #            "actual": actual_type,
+        #        }
+        #    )
 
         # Log to MLflow
         mlflow.log_dict(page.model_dump(), f"inputs/{step}.json")
