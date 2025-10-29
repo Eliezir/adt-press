@@ -32,11 +32,16 @@ class TextTypeEvaluator(BaseEvaluator):
         test = tc["data"]
         text = test["page_text_all"]
         page_image_url = test["page_image"]
+        book_title = test["book_name"]
+        page_number = test["page_id"]
+
         page_image_path = self.download_azure_image(page_image_url, f"text_extraction_page_{tc['id']}.png")
 
         truth = tc["annotations"][0]["result"]
         result = {
             "id": tc["id"],
+            "book_title": book_title,
+            "page_number": page_number,
             "label_studio_url": f"https://{self.label_studio_config.host}/projects/{tc['project']}/data?task={tc['id']}",
             "page_text": text,
             "page_image_path": str(page_image_path.relative_to(self.output_dir)),
@@ -105,7 +110,7 @@ class TextTypeEvaluator(BaseEvaluator):
                 }
             )
 
-        # Add u nmatched actual results
+        # Add unmatched actual results
         #for normalized_content, actual_type in actual_type_by_text.items():
         #    matches.append(
         #        {
