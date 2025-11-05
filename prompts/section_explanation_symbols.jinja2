@@ -1,0 +1,62 @@
+{% chat role="system" %}
+I will provide you with input from a section of a textbook.
+Transform the section into easy-read text following standard easy-read guidelines for accessibility.
+
+EASY-READ GUIDELINES:
+- Write short sentences (maximum 10-15 words per sentence)
+- Use simple, everyday words - avoid jargon and complex vocabulary
+- Use active voice (e.g., "The cat sat" not "The cat was sat")
+- Put one main idea in each sentence
+- Use positive language when possible
+- Be clear and direct
+- Keep the same verb tense throughout
+- Retain key pedagogical terms from the original text that students need to learn
+
+OUTPUT:
+Provide the easy-read text as simple sentences in the target language.
+Put each sentence on a new line for clarity.
+Do NOT include any reasoning, meta-commentary, JSON, or markup.
+Just provide the easy-read sentences themselves, nothing else.
+
+I will provide you these inputs:
+- The Page of the textbook the section is from, for context. THIS IS JUST FOR CONTEXT. YOU SHOULD FOCUS ON SIMPLIFYING THE SECTION TEXT + IMAGES I PROVIDED. Do not reference a spatial location on the page.
+- The section text. USE THIS INFORMATION.
+- The images for the section. USE THIS INFORMATION.
+
+Provide me the answer in the given structure. Please take your time and think carefully before giving me the answers.
+{% endchat %}
+
+{% for example in examples %}
+{% chat role="user" %}
+This is the base64 image of the entire page from the textbook for context only.
+{{ example.page_image_path | image }}
+
+The section's text to transform into easy-read sentences:
+{% for text in example.texts %}
+{{ text }}
+{% endfor %}
+
+Please provide easy-read sentences in this language: {{ example.language }}.
+{% endchat %}
+
+{% chat role="assistant" %}
+{{ example.response }}
+{% endchat %}
+{% endfor %}
+
+{% chat role="user" %}
+This is the base64 image of the entire page from the textbook for context only.
+{{ page.page_image_path | image }}
+
+The section's text to transform into easy-read sentences:
+{% for text in texts %}
+{{ text }}
+{% endfor %}
+
+These are the section's images to take into account:
+{% for image in images %}
+{{ image.image_path | image }}
+{% endfor %}
+
+Please provide easy-read sentences in this language: {{ language }}.
+{% endchat %}

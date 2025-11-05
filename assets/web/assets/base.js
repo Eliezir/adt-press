@@ -83,6 +83,7 @@ import {
 import { prepareActivity } from "./activity.js";
 import { initCharacterDisplay } from "./modules/character-display.js"
 import { initMatomo } from "./modules/analytics.js";
+import { initializeEasyReadTabs } from "./modules/easy_read.js";
 
 // Constants
 const PLACEHOLDER_TITLE = "Accessible Digital Textbook";
@@ -693,6 +694,10 @@ async function initializeUIComponents() {
     if (isFeatureEnabled('activities', true)) {
       prepareActivity();
     }
+    
+    // Initialize easy-read tabs
+    initializeEasyReadTabs();
+    
     loadToggleButtonState();
   } catch (error) {
     console.error('Error initializing UI components:', error);

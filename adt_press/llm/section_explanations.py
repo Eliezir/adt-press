@@ -12,12 +12,16 @@ from adt_press.utils.languages import LANGUAGE_MAP
 
 
 class ExplanationResponse(CleanTextBaseModel):
-    reasoning: str
     explanation: str
 
 
 async def get_section_explanation(
-    config: PromptConfig, page: Page, section: PageSection, texts: list[str], images: list[ProcessedImage], language_code: str
+    config: PromptConfig,
+    page: Page,
+    section: PageSection,
+    texts: list[str],
+    images: list[ProcessedImage],
+    language_code: str,
 ) -> SectionExplanation:
     language = LANGUAGE_MAP[language_code]
 
@@ -35,13 +39,16 @@ async def get_section_explanation(
     response: ExplanationResponse = await client.chat.completions.create(
         model=config.model,
         response_model=ExplanationResponse,
-        messages=[m.model_dump(exclude_none=True) for m in prompt.chat_messages(context)],
+        messages=[
+            m.model_dump(exclude_none=True)
+            for m in prompt.chat_messages(context)
+        ],
         max_retries=config.max_retries,
     )
 
     return SectionExplanation(
         explanation_id=f"{section.section_id}_eli5",
         section_id=section.section_id,
-        reasoning=response.reasoning,
+        reasoning="",
         explanation=response.explanation,
     )
