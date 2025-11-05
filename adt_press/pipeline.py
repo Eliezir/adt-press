@@ -8,7 +8,7 @@ from hamilton import driver, registry, telemetry
 from hamilton.lifecycle import NodeExecutionHook
 from omegaconf import DictConfig
 
-from adt_press.nodes import config_nodes, image_nodes, pdf_nodes, plate_nodes, report_nodes, section_nodes, speech_nodes, web_nodes
+from adt_press.nodes import config_nodes, image_nodes, pdf_nodes, plate_nodes, report_nodes, section_nodes, speech_nodes, web_nodes, epub_nodes
 
 registry.disable_autoload()
 telemetry.disable_telemetry()
@@ -25,6 +25,7 @@ modules = [
     web_nodes,
     plate_nodes,
     speech_nodes,
+    epub_nodes,
 ]
 
 
@@ -88,7 +89,7 @@ def run_pipeline(config: DictConfig) -> None:
             print(f"- {model}")
 
     # Execute nodes in sequence to ensure reports are generated even if later steps fail
-    nodes_to_execute = ["report_pages", "plate_report", "glossary_report", "web_report", "report_index"]
+    nodes_to_execute = ["report_pages", "plate_report", "glossary_report", "web_report", "report_index", "package_adt_epub"]
 
     dr.execute(nodes_to_execute, overrides={"config": config})
 
