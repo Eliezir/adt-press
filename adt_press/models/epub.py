@@ -1,4 +1,3 @@
-import os
 from typing import Optional
 
 from ebooklib import epub
@@ -58,14 +57,13 @@ def create_epub_file(
     texts_by_id = {txt.text_id: txt for txt in plate.texts}
 
     image_items = {}
-    sections_by_id = {section.section_id: section for section in plate.sections}
 
     # add all our images to the book
     for webpage in web_pages:
         for image_id in webpage.image_ids:
             img = images_by_id.get(image_id)
             img_bytes = cached_read_file(img.image_path)
-            img_item = epub.EpubItem(uid=img.image_id, file_name=f"images/{image_id}.png", media_type="image/png", content=img_bytes)    
+            img_item = epub.EpubItem(uid=img.image_id, file_name=f"images/{image_id}.png", media_type="image/png", content=img_bytes)
 
             # replace our PlateImage with one that has the correct path
             images_by_id[image_id] = PlateImage(image_id=img.image_id, image_path=f"images/{image_id}.png", caption_id=img.caption_id)
