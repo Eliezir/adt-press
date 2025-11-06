@@ -18,6 +18,7 @@ from adt_press.nodes import (
     section_nodes,
     speech_nodes,
     web_nodes,
+    webpub_nodes,
 )
 
 registry.disable_autoload()
@@ -36,6 +37,7 @@ modules = [
     plate_nodes,
     speech_nodes,
     epub_nodes,
+    webpub_nodes,
 ]
 
 
@@ -99,7 +101,7 @@ def run_pipeline(config: DictConfig) -> None:
             print(f"- {model}")
 
     # Execute nodes in sequence to ensure reports are generated even if later steps fail
-    nodes_to_execute = ["report_pages", "plate_report", "glossary_report", "web_report", "report_index", "package_adt_epub"]
+    nodes_to_execute = ["report_pages", "plate_report", "glossary_report", "web_report", "report_index", "package_epub", "package_webpub"]
 
     dr.execute(nodes_to_execute, overrides={"config": config})
 

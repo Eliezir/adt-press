@@ -9,7 +9,7 @@ from adt_press.models.web import WebPage
 
 
 @cache(behavior="recompute")
-def package_adt_epub(
+def package_epub(
     template_config: TemplateConfig,
     run_output_dir_config: str,
     pdf_title_config: str,
