@@ -28,6 +28,9 @@ def package_webpub(
 ) -> str:
     default_language = list(plate_translations.keys())[0]
 
+    reading_order: list[dict[str, str]] = []
+    resources: list[dict[str, str]] = []
+
     manifest = {
         "@context": "https://readium.org/webpub-manifest/context.jsonld",
         "metadata": {
@@ -39,8 +42,8 @@ def package_webpub(
         "links": [
             {"rel": "self", "href": "manifest.json", "type": "application/webpub+json"},
         ],
-        "readingOrder": [],
-        "resources": [],
+        "readingOrder": reading_order,
+        "resources": resources,
     }
 
     # populate our reading order from our web pages
@@ -49,7 +52,7 @@ def package_webpub(
             "href": f"{webpage.section_id}.html",
             "type": "text/html",
         }
-        manifest["readingOrder"].append(page_entry)
+        reading_order.append(page_entry)
 
     webpub_dir = os.path.join(run_output_dir_config, "webpub")
     if os.path.exists(webpub_dir):
@@ -81,7 +84,7 @@ def package_webpub(
 
             resource_entry = {"href": file_path.replace("\\", "/"), "type": mime_type}
 
-            manifest["resources"].append(resource_entry)
+            resources.append(resource_entry)
 
     # write out the manifest file
     manifest_path = os.path.join(webpub_dir, "manifest.json")

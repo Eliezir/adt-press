@@ -53,15 +53,15 @@ def create_epub_file(
         book.add_item(css)
 
     # Add images
-    images_by_id = {img.image_id: img for img in plate.images}
-    texts_by_id = {txt.text_id: txt for txt in plate.texts}
+    images_by_id: dict[str, PlateImage] = {img.image_id: img for img in plate.images}
+    texts_by_id: dict[str, PlateText] = {txt.text_id: txt for txt in plate.texts}
 
     image_items = {}
 
     # add all our images to the book
     for webpage in web_pages:
         for image_id in webpage.image_ids:
-            img = images_by_id.get(image_id)
+            img = images_by_id[image_id]
             img_bytes = cached_read_file(img.image_path)
             img_item = epub.EpubItem(uid=img.image_id, file_name=f"images/{image_id}.png", media_type="image/png", content=img_bytes)
 
