@@ -71,6 +71,10 @@ def page_range_config(config: DictConfig) -> PageRangeConfig:
     return PageRangeConfig.model_validate(config.get("page_range", {}))
 
 
+def page_grouping_config(config: DictConfig) -> str:
+    return str(config.get("page_grouping", "single"))
+
+
 @cache(behavior="recompute")
 def layout_types_config(config: DictConfig) -> dict[str, LayoutType]:
     types = dict[str, LayoutType]()

@@ -1,6 +1,6 @@
 import enum
 import os
-from typing import Self
+from typing import Literal, Self
 
 import yaml
 from pydantic import BaseModel, Field, model_validator
@@ -139,6 +139,7 @@ class TemplateRenderConfig(PathHashMixin):
 class PageRangeConfig(BaseModel):
     start: int = 0
     end: int = 0
+    page_grouping: Literal["single", "spread"] = "single"
 
 
 class TemplateConfig(BaseModel):

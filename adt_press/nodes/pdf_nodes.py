@@ -127,5 +127,6 @@ def pdf_text_groups_by_id(processed_pdf_texts: dict[str, PageTexts]) -> dict[str
     return groups
 
 
-def pdf_pages(run_output_dir_config: str, pdf_path_config: str, pdf_hash_config: str, page_range_config: PageRangeConfig) -> list[Page]:
-    return pages_for_pdf(run_output_dir_config, pdf_path_config, page_range_config.start, page_range_config.end)
+def pdf_pages(run_output_dir_config: str, pdf_path_config: str, pdf_hash_config: str, page_range_config: PageRangeConfig, page_grouping_config: str) -> list[Page]:
+    spread_mode = page_grouping_config == "spread"
+    return pages_for_pdf(run_output_dir_config, pdf_path_config, page_range_config.start, page_range_config.end, spread_mode)
