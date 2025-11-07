@@ -139,7 +139,6 @@ class TemplateRenderConfig(PathHashMixin):
 class PageRangeConfig(BaseModel):
     start: int = 0
     end: int = 0
-    page_grouping: Literal["single", "spread"] = "single"
 
 
 class TemplateConfig(BaseModel):
