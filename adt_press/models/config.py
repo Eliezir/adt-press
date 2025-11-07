@@ -1,6 +1,6 @@
 import enum
 import os
-from typing import Literal, Self
+from typing import Self
 
 import yaml
 from pydantic import BaseModel, Field, model_validator
