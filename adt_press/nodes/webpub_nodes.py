@@ -3,6 +3,7 @@ import os
 import shutil
 from datetime import datetime
 
+from bs4 import BeautifulSoup
 from hamilton.function_modifiers import cache
 
 from adt_press.models.config import TemplateConfig
@@ -40,7 +41,11 @@ def package_webpub(
             "modified": datetime.now().isoformat(),
         },
         "links": [
-            {"rel": "self", "href": "manifest.json", "type": "application/webpub+json"},
+            {
+                "rel": "self",
+                "href": "manifest.json",
+                "type": "application/webpub+json",
+            },
         ],
         "readingOrder": reading_order,
         "resources": resources,
@@ -62,6 +67,27 @@ def package_webpub(
     adt_dir = os.path.join(run_output_dir_config, "adt")
     shutil.copytree(adt_dir, webpub_dir)
 
+    # Remove navigation controls that are not needed in packaged webpub output.
+    interface_asset_path = os.path.join(webpub_dir, "assets", "interface.html")
+    if os.path.exists(interface_asset_path):
+        with open(
+            interface_asset_path,
+            "r",
+            encoding="utf-8",
+        ) as interface_file:
+            interface_soup = BeautifulSoup(interface_file, "html.parser")
+
+        nav_controls = interface_soup.find(id="back-forward-buttons")
+        if nav_controls:
+            nav_controls.decompose()
+
+            with open(
+                interface_asset_path,
+                "w",
+                encoding="utf-8",
+            ) as interface_file:
+                interface_file.write(str(interface_soup))
+
     # now add all our resources to the manifest
     for root, dirs, files in os.walk(webpub_dir):
         for file in files:
@@ -82,7 +108,10 @@ def package_webpub(
             elif file.endswith(".json"):
                 mime_type = "application/json"
 
-            resource_entry = {"href": file_path.replace("\\", "/"), "type": mime_type}
+            resource_entry = {
+                "href": file_path.replace("\\", "/"),
+                "type": mime_type,
+            }
 
             resources.append(resource_entry)
 
@@ -94,7 +123,11 @@ def package_webpub(
     # zip it into a standalone webpub file
     webpub_filename = f"{pdf_title_config}.webpub"
     webpub_path = os.path.join(run_output_dir_config, webpub_filename)
-    shutil.make_archive(base_name=webpub_path.replace(".webpub", ""), format="zip", root_dir=webpub_dir)
+    shutil.make_archive(
+        base_name=webpub_path.replace(".webpub", ""),
+        format="zip",
+        root_dir=webpub_dir,
+    )
     # rename .zip to .webpub
     os.rename(webpub_path.replace(".webpub", ".zip"), webpub_path)
 
