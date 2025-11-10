@@ -32,7 +32,7 @@ def _copy_image(extract_dir: str, images_dir: str, relative_path: str) -> str:
     return os.path.relpath(new_path)
 
 
-def pages_for_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int) -> list[Page]:
+def pages_for_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int, spread_mode: bool = False) -> list[Page]:
     """
     Extract pages from PDF using the standalone pdf_extractor tool.
 
@@ -41,6 +41,7 @@ def pages_for_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int
         pdf_path: Path to the PDF file
         start_page: Starting page number (1-based)
         end_page: Ending page number (1-based, 0 means end of document)
+        spread_mode: Whether to extract as spreads (first page solo, then pairs)
 
     Returns:
         List of Page objects with extracted content
@@ -72,6 +73,10 @@ def pages_for_pdf(output_dir: str, pdf_path: str, start_page: int, end_page: int
         str(end_page),
         "--quiet",
     ]
+
+    # Add spread mode flag if enabled
+    if spread_mode:
+        cmd.append("--spread_mode")
 
     # Run the extractor
     try:
