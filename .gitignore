@@ -209,5 +209,7 @@ __marimo__/
 # never check in our output directory
 output/
 outputs/
+webpub-output/
+pdfs/
 .hamilton_cache/
 .DS_Store

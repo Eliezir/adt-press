@@ -1,9 +1,9 @@
 label: "???"
 pdf_path: "???"
 
-input_language: "???"
-plate_language: "${input_language}"
-output_languages: ["${input_language}"]
+input_language: "pt-br"
+plate_language: "pt-br"
+output_languages: ["pt-br", "en"]
 
 output_dir: "output"
 run_output_dir: "${output_dir}/${label}"
@@ -57,7 +57,7 @@ layout_types:
 
   novel_images_only:
     description: "Novel pages with only images, including spreads, such as illustrated novels or photo essays."
-    render_strategy: two_column
+    render_strategy: single_column
 
   mathbook:
     description: "Math textbook pages with equations, diagrams, and structured layouts typical of educational math content."
@@ -69,7 +69,7 @@ layout_types:
 
   storybook_images_only:
     description: "Storybook pages with only illustrations, no text content."
-    render_strategy: two_column
+    render_strategy: single_column
 
   comic_overlay:
     description: "Visually rich layouts that are image focused with text overlayed positionally. For examples comics, storybooks, graphic novels features pages with speech bubbles, captions, and text overlays on images. Complex spatial relationships between text and visuals."
@@ -140,12 +140,8 @@ text_filters:
     - other
 
 section_filters:
-  pruned_section_types:
-    - back_cover
-    - credits
-    - inside_cover
+  pruned_section_types: []
    
-
 prompts:
   text_extraction:
     model: default
