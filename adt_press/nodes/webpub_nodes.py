@@ -3,7 +3,6 @@ import os
 import shutil
 from datetime import datetime
 
-from bs4 import BeautifulSoup
 from hamilton.function_modifiers import cache
 
 from adt_press.models.config import TemplateConfig
@@ -67,26 +66,17 @@ def package_webpub(
     adt_dir = os.path.join(run_output_dir_config, "adt")
     shutil.copytree(adt_dir, webpub_dir)
 
-    # Remove navigation controls that are not needed in packaged webpub output.
-    interface_asset_path = os.path.join(webpub_dir, "assets", "interface.html")
-    if os.path.exists(interface_asset_path):
-        with open(
-            interface_asset_path,
-            "r",
-            encoding="utf-8",
-        ) as interface_file:
-            interface_soup = BeautifulSoup(interface_file, "html.parser")
+    # Hide navigation controls in the packaged webpub via config features.
+    config_path = os.path.join(webpub_dir, "assets", "config.json")
+    if os.path.exists(config_path):
+        with open(config_path, "r", encoding="utf-8") as config_file:
+            web_config = json.load(config_file)
 
-        nav_controls = interface_soup.find(id="back-forward-buttons")
-        if nav_controls:
-            nav_controls.decompose()
+        features = web_config.setdefault("features", {})
+        features["showNavigationControls"] = False
 
-            with open(
-                interface_asset_path,
-                "w",
-                encoding="utf-8",
-            ) as interface_file:
-                interface_file.write(str(interface_soup))
+        with open(config_path, "w", encoding="utf-8") as config_file:
+            json.dump(web_config, config_file, ensure_ascii=False, indent=2)
 
     # now add all our resources to the manifest
     for root, dirs, files in os.walk(webpub_dir):

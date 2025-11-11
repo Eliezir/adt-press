@@ -470,6 +470,22 @@ function applyFeatureFlags(features) {
           container.classList.toggle('hidden', !enabled);
         }
       }
+    } else if (feature === 'showNavigationControls') {
+      // Hide/show the navigation controls wrapper and ensure it is inert when hidden
+      const navButtons = document.getElementById('back-forward-buttons');
+      const backButton = document.getElementById('back-button');
+      const forwardButton = document.getElementById('forward-button');
+
+      if (navButtons) {
+        navButtons.classList.toggle('hidden', !enabled);
+        navButtons.setAttribute('aria-hidden', (!enabled).toString());
+      }
+
+      [backButton, forwardButton].forEach(button => {
+        if (!button) return;
+        button.tabIndex = enabled ? 0 : -1;
+        button.setAttribute('aria-hidden', (!enabled).toString());
+      });
     } else if (feature === 'characterDisplay') {
       // Hide/show the character profile row
       const characterProfileRow = document.getElementById('character-profile-row');
