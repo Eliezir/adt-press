@@ -46,6 +46,7 @@ class PipelineTest(unittest.TestCase):
                 "label": "raven",
                 "pdf_path": "assets/raven.pdf",
                 "page_range": dict(start=0, end=5),
+                "input_language": "en",
                 "plate_language": "fr",
                 "output_languages": ["en", "fr"],
                 "print_available_models": "true",
@@ -116,8 +117,7 @@ class PipelineTest(unittest.TestCase):
                 "label": "raven",
                 "pdf_path": "assets/raven.pdf",
                 "page_range": dict(start=0, end=5),
-                "plate_language": "en",
-                "output_languages": ["en"],
+                "input_language": "en",
             }
 
             config = DictConfig(OmegaConf.merge(file_config, test_config))
