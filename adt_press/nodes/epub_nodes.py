@@ -1,3 +1,4 @@
+import json
 import os
 
 from hamilton.function_modifiers import cache
@@ -29,6 +30,31 @@ def package_epub(
     adt_dir = os.path.join(run_output_dir_config, "adt")
     image_dir = os.path.join(adt_dir, "images")
 
+    # Temporarily disable tutorial experience when packaging EPUB assets.
+    config_path = os.path.join(adt_dir, "assets", "config.json")
+    original_config_text: str | None = None
+    config_modified = False
+    if os.path.exists(config_path):
+        with open(config_path, "r", encoding="utf-8") as config_file:
+            original_config_text = config_file.read()
+
+        try:
+            config_data = json.loads(original_config_text)
+        except json.JSONDecodeError:
+            config_data = None
+        if config_data is not None:
+            features = config_data.setdefault("features", {})
+            features["showTutorial"] = False
+
+            with open(config_path, "w", encoding="utf-8") as config_file:
+                json.dump(
+                    config_data,
+                    config_file,
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            config_modified = True
+
     plate_texts = {txt.text_id: txt for txt in plate.texts}
 
     # Load CSS if available
@@ -38,23 +64,28 @@ def package_epub(
         with open(css_path, "r") as f:
             css_content = f.read()
 
-    for language, translations in plate_translations.items():
-        epub_filename = f"{pdf_title_config}_{language}.epub"
-        epub_path = os.path.join(run_output_dir_config, epub_filename)
+    try:
+        for language, translations in plate_translations.items():
+            epub_filename = f"{pdf_title_config}_{language}.epub"
+            epub_path = os.path.join(run_output_dir_config, epub_filename)
 
-        create_epub_file(
-            output_path=epub_path,
-            title=pdf_title_config,
-            language=language,
-            author="ADT Press",
-            plate=plate,
-            web_pages=web_pages,
-            plate_texts=plate_texts,
-            translations=translations,
-            image_dir=image_dir,
-            css_content=css_content,
-        )
+            create_epub_file(
+                output_path=epub_path,
+                title=pdf_title_config,
+                language=language,
+                author="ADT Press",
+                plate=plate,
+                web_pages=web_pages,
+                plate_texts=plate_texts,
+                translations=translations,
+                image_dir=image_dir,
+                css_content=css_content,
+            )
 
-        epub_paths[language] = epub_filename
+            epub_paths[language] = epub_filename
+    finally:
+        if config_modified and original_config_text is not None:
+            with open(config_path, "w", encoding="utf-8") as config_file:
+                config_file.write(original_config_text)
 
     return epub_paths

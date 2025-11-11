@@ -758,6 +758,10 @@ const finalizeInitialization = async () => {
       
       // Initialize tutorial via lazy loading
       async () => {
+        if (!isFeatureEnabled('showTutorial', true)) {
+          return;
+        }
+
         const tutorialModule = await lazyLoad.load('tutorial', () => import('./modules/tutorial.js'));
         if (tutorialModule.init) {
           tutorialModule.init();

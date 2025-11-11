@@ -66,7 +66,7 @@ def package_webpub(
     adt_dir = os.path.join(run_output_dir_config, "adt")
     shutil.copytree(adt_dir, webpub_dir)
 
-    # Hide navigation controls in the packaged webpub via config features.
+    # Adjust packaged config to disable UI affordances not needed offline.
     config_path = os.path.join(webpub_dir, "assets", "config.json")
     if os.path.exists(config_path):
         with open(config_path, "r", encoding="utf-8") as config_file:
@@ -74,6 +74,7 @@ def package_webpub(
 
         features = web_config.setdefault("features", {})
         features["showNavigationControls"] = False
+        features["showTutorial"] = False
 
         with open(config_path, "w", encoding="utf-8") as config_file:
             json.dump(web_config, config_file, ensure_ascii=False, indent=2)

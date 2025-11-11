@@ -13,6 +13,7 @@
     "eli5": {{ (config.explanation_strategy != 'none') | tojson }},
   "readAloud": {{ (config.speech_strategy != 'none') | tojson }},
   "autoplay": false,
+  "showTutorial": true,
     "describeImages": false,
     "notepad": false,
     "state": true,
